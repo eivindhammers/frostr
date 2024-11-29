@@ -164,6 +164,17 @@ get_sources <-
     r_content <- httr::content(r, as = "text", encoding = "UTF-8")
     r_json <- jsonlite::fromJSON(r_content, flatten = TRUE)
 
-    tibble::as_tibble(r_json[["data"]])
+    r_tibble <- tibble::as_tibble(r_json[["data"]])
+    r_tibble <- tidyr::unnest_wider(
+      r_tibble,
+      geometry.coordinates,
+      names_sep = "_"
+    )
+    r_tibble <- dplyr::rename(
+      r_tibble,
+      "lon" = geometry.coordinates_1,
+      "lat" = geometry.coordinates_2
+    )
 
+    return(r_tibble)
   }
