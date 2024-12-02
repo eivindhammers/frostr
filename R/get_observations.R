@@ -168,7 +168,8 @@ get_observations <-
 
     if (httr::status_code(r) != 200) {
       httr::warn_for_status(r)
-      return(httr::http_status(r)$message)
+      obs_df <- tibble::tibble(http_status = httr::http_status(r)$message)
+      return(obs_df)
     }
 
     frost_stop_for_type(r)
@@ -182,6 +183,7 @@ get_observations <-
 
     obs_df <- tidyr::unnest(r_data, "observations")
     obs_df <- tibble::as_tibble(obs_df)
+    obs_df$http_status <- "200"
 
     return(obs_df)
 
