@@ -166,7 +166,11 @@ get_observations <-
 
     r <- httr::GET(url, frostr_ua, query = input_args)
 
-    httr::stop_for_status(r)
+    if (httr::status_code(r) != 200) {
+      httr::warn_for_status(r)
+      return(httr::http_status(r)$message)
+    }
+
     frost_stop_for_type(r)
 
     if (return_response) return(r)
@@ -178,5 +182,7 @@ get_observations <-
 
     obs_df <- tidyr::unnest(r_data, "observations")
     obs_df <- tibble::as_tibble(obs_df)
+
+    return(obs_df)
 
   }
