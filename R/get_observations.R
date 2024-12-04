@@ -183,7 +183,7 @@ get_observations <-
 
     obs_df <- tidyr::unnest(r_data, "observations")
     obs_df <- tibble::as_tibble(obs_df)
-    obs_df$http_status <- "200"
+    obs_df$http_status <- "200: Success"
 
     return(obs_df)
 
